@@ -15,8 +15,6 @@ services:
       - db
       - rabbitmq
       - elasticsearch
-    environment:
-      - APP_ENV=dev
 
   db:
     image: mariadb:11
