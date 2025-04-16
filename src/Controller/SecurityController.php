@@ -14,25 +14,10 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/api', name: 'api_')]
 class SecurityController extends AbstractController
 {
-    public function __construct()
-    {
-       
-    }
-
     #[Route('/login', name: 'app_login', methods: ['POST'])]
-    public function login(): JsonResponse
+    public function login(): void
     {
-        return $this->json([
-            'message' => 'Login successful',
-        ]);
-    }
-
-    #[Route('/logout', name: 'app_logout', methods: ['POST '])]
-    public function logout(): JsonResponse
-    {
-        return $this->json([
-            'message' => 'Login successful',
-        ]);
+        // handled in security.yaml
     }
 
     #[Route('/register', name: 'register', methods: ['POST'])]
