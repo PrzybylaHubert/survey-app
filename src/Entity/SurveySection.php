@@ -16,7 +16,7 @@ class SurveySection
     private int $id;
 
     #[ORM\ManyToOne(inversedBy: 'surveySections')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Survey $survey = null;
 
     #[ORM\Column(length: 255)]
