@@ -37,6 +37,9 @@ class Survey
     #[ORM\OneToMany(targetEntity: SurveyAssignment::class, mappedBy: 'survey', orphanRemoval: true)]
     private Collection $surveyAssignments;
 
+    #[ORM\Column(length: 1023, nullable: true)]
+    private ?string $description = null;
+
     public function __construct()
     {
         $this->surveySections = new ArrayCollection();
@@ -140,6 +143,18 @@ class Survey
                 $surveyAssignment->setSurvey(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }
