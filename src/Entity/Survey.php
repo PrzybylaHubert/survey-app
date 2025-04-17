@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\SurveyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: SurveyRepository::class)]
 class Survey
@@ -13,16 +16,20 @@ class Survey
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['surveyInfo'])]
     private int $id;
 
     #[ORM\Column]
+    #[Groups(['surveyInfo'])]
     private bool $is_active;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['surveyInfo'])]
     private string $name;
 
     #[ORM\ManyToOne(inversedBy: 'surveys')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['surveyInfo'])]
     private ?User $author = null;
 
     /**
@@ -38,6 +45,7 @@ class Survey
     private Collection $surveyAssignments;
 
     #[ORM\Column(length: 1023, nullable: true)]
+    #[Groups(['surveyInfo'])]
     private ?string $description = null;
 
     public function __construct()

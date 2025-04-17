@@ -12,4 +12,9 @@ enum QuestionType: string
     case NUMBER = 'number';
     case SELECT = 'select';
     case MULTIPLE_SELECT = 'multiple_select';
+
+    public static function values(): array
+    {
+        return array_map(fn(self $case) => $case->value, self::cases());
+    }
 }
