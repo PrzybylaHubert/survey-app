@@ -10,6 +10,7 @@ use App\Entity\Survey;
 use App\Entity\SurveyAssignment;
 use App\Entity\User;
 use App\Manager\SurveyManager;
+use App\Service\SurveySearchService;
 use App\Service\SurveyWorkflowService;
 use App\Validator\SurveyAnswers;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
@@ -25,14 +26,26 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 #[Route('/api', name: 'api_')]
 final class SurveyController extends AbstractController
 {
-    #[Route('/survey/{survey}', name: 'get_survey', methods: ['GET'])]
-    public function show(Survey $survey): JsonResponse
-    {
-        $this->denyAccessUnlessGranted('VIEW', $survey);
+    #[Route('/search-surveys', name: 'search_surveys', methods: ['GET'])]
+    public function findSurveys(
+        Request $request,
+        SurveySearchService $surveySearchService,
+    ): JsonResponse {
+        $query = $request->query->get('query', '');
+        $page = (int) $request->query->get('page', 1);
+        $limit = (int) $request->query->get('limit', 10);
+
+        $results = $surveySearchService->search($query, $page, $limit);
 
         return $this->json(
             data: [
-                'survey' => $survey,
+                'surveys' => $results,
+                'pagination' => [
+                    'page' => $page,
+                    'perPage' => 10,
+                    'total' => $results->getNbResults(),
+                    'totalPages' => ceil($results->getNbResults() / 10),
+                ],
             ],
             context: ['groups' => ['surveyInfo']],
         );
