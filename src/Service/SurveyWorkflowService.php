@@ -113,5 +113,4 @@ class SurveyWorkflowService
 
         $this->entityManager->persist($answer);
     }
-
 }
