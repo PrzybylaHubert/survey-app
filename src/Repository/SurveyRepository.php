@@ -16,6 +16,19 @@ class SurveyRepository extends ServiceEntityRepository
         parent::__construct($registry, Survey::class);
     }
 
+    public function findFullSurveyById(int $surveyId): ?Survey
+    {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.surveySections', 'sec')
+            ->leftJoin('sec.questions', 'q')
+            ->leftJoin('q.offeredAnswers', 'oa')
+            ->addSelect('sec', 'q', 'oa')
+            ->where('s.id = :surveyId')
+            ->setParameter('surveyId', $surveyId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     //    /**
     //     * @return Survey[] Returns an array of Survey objects
     //     */

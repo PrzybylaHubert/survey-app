@@ -36,6 +36,7 @@ class Survey
      * @var Collection<int, SurveySection>
      */
     #[ORM\OneToMany(targetEntity: SurveySection::class, mappedBy: 'survey', orphanRemoval: true)]
+    #[Groups(['surveyFull'])]
     private Collection $surveySections;
 
     /**

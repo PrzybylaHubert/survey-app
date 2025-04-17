@@ -15,11 +15,9 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class SurveyManager
 {
-    private EntityManagerInterface $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
     public function createSurvey(SurveyDTO $surveyData, User $user): Survey
@@ -57,5 +55,21 @@ class SurveyManager
         $this->entityManager->flush();
 
         return $survey;
+    }
+
+    public function editSurvey(Survey $survey, SurveyDTO $surveyData): void
+    {
+        $survey->setName($surveyData->getName());
+        $survey->setDescription($surveyData->getDescription());
+        $survey->setIsActive($surveyData->isActive());
+
+        $this->entityManager->flush();
+    }
+
+    public function deleteSurvey(Survey $survey): void
+    {
+        $this->entityManager->remove($survey);
+
+        $this->entityManager->flush();
     }
 }

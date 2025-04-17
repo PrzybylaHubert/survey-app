@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: SurveyQuestionRepository::class)]
 class SurveyQuestion
@@ -15,6 +16,7 @@ class SurveyQuestion
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['surveyFull'])]
     private int $id;
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
@@ -22,18 +24,22 @@ class SurveyQuestion
     private ?SurveySection $section = null;
 
     #[ORM\Column(enumType: QuestionType::class)]
+    #[Groups(['surveyFull'])]
     private QuestionType $questionType;
 
     #[ORM\Column(length: 511)]
+    #[Groups(['surveyFull'])]
     private string $question;
 
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    #[Groups(['surveyFull'])]
     private ?int $limiter = null;
 
     /**
      * @var Collection<int, SurveyOfferedAnswer>
      */
     #[ORM\OneToMany(targetEntity: SurveyOfferedAnswer::class, mappedBy: 'question', orphanRemoval: true)]
+    #[Groups(['surveyFull'])]
     private Collection $offeredAnswers;
 
     public function __construct()

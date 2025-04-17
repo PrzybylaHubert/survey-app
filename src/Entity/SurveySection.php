@@ -6,6 +6,7 @@ use App\Repository\SurveySectionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: SurveySectionRepository::class)]
 class SurveySection
@@ -13,6 +14,7 @@ class SurveySection
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['surveyFull'])]
     private int $id;
 
     #[ORM\ManyToOne(inversedBy: 'surveySections')]
@@ -20,12 +22,14 @@ class SurveySection
     private ?Survey $survey = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['surveyFull'])]
     private string $name;
 
     /**
      * @var Collection<int, SurveyQuestion>
      */
     #[ORM\OneToMany(targetEntity: SurveyQuestion::class, mappedBy: 'section', orphanRemoval: true)]
+    #[Groups(['surveyFull'])]
     private Collection $questions;
 
     public function __construct()

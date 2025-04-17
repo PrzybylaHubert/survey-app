@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SurveyAssignmentRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class SurveyAssignment
 {
     #[ORM\Id]
@@ -79,6 +80,12 @@ class SurveyAssignment
         $this->dateStart = $dateStart;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function setDateStartAutomatically(): void
+    {
+        $this->dateStart = new \DateTimeImmutable();
     }
 
     public function getDateFinish(): ?\DateTimeImmutable

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\SurveyOfferedAnswerRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: SurveyOfferedAnswerRepository::class)]
 class SurveyOfferedAnswer
@@ -11,6 +12,7 @@ class SurveyOfferedAnswer
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['surveyFull'])]
     private int $id;
 
     #[ORM\ManyToOne(inversedBy: 'offeredAnswers')]
@@ -18,6 +20,7 @@ class SurveyOfferedAnswer
     private ?SurveyQuestion $question = null;
 
     #[ORM\Column(length: 511)]
+    #[Groups(['surveyFull'])]
     private string $offeredAnswer;
 
     public function getId(): int
