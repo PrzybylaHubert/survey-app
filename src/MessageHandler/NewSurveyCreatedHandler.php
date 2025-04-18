@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\MessageHandler;
+
+use App\Message\NewSurveyCreatedMessage;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+
+#[AsMessageHandler()]
+class NewSurveyCreatedHandler
+{
+    public function __invoke(NewSurveyCreatedMessage $message)
+    {
+        $surveyName = $message->getSurveyName();
+        $surveyDescription = $message->getSurveyDescription();
+
+        //send notifications to users
+    }
+}
