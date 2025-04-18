@@ -11,12 +11,15 @@ use App\Entity\SurveyQuestion;
 use App\Entity\SurveyOfferedAnswer;
 use App\Entity\User;
 use App\Enum\QuestionType;
+use App\Message\NewSurveyCreatedMessage;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class SurveyManager
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly MessageBusInterface $messageBus,
     ) {
     }
 
@@ -53,6 +56,10 @@ class SurveyManager
 
         
         $this->entityManager->flush();
+        $this->messageBus->dispatch(new NewSurveyCreatedMessage(
+            $survey->getName(),
+            $survey->getDescription()
+        ));
 
         return $survey;
     }
