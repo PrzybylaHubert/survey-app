@@ -16,7 +16,7 @@ class SurveyQuestionManager extends AbstractManager
     ) {
     }
 
-    public function createSurveyQuestion(
+    public function createQuestion(
         SurveyQuestionDTO $questionData,
         SurveySection $surveySection,
         bool $flush = true,
@@ -27,7 +27,7 @@ class SurveyQuestionManager extends AbstractManager
         $question->setSection($surveySection);
 
         foreach ($questionData->getOfferedAnswers() as $offeredAnswerData) {
-            $this->surveyOfferedAnswerManager->createSurveyOfferedAnswer($offeredAnswerData, $question, false);
+            $this->surveyOfferedAnswerManager->createOfferedAnswer($offeredAnswerData, $question, false);
         }
 
         $this->saveEntity($question, $flush);
@@ -35,7 +35,7 @@ class SurveyQuestionManager extends AbstractManager
         return $question;
     }
 
-    public function editSUrveyQuestion(SurveyQuestion $question, SurveyQuestionDTO $questionData): void
+    public function editQuestion(SurveyQuestion $question, SurveyQuestionDTO $questionData): void
     {
         $question->setQuestion($questionData->getQuestion());
         $question->setQuestionType(QuestionType::from($questionData->getType()));

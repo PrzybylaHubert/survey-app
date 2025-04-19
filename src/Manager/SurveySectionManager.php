@@ -15,7 +15,7 @@ class SurveySectionManager extends AbstractManager
     ) {
     }
 
-    public function createSurveySection(
+    public function createSection(
         SurveySectionDTO $sectionData,
         Survey $survey,
         bool $flush = true,
@@ -25,7 +25,7 @@ class SurveySectionManager extends AbstractManager
         $section->setSurvey($survey);
     
         foreach ($sectionData->getQuestions() as $questionData) {
-            $this->surveyQuestionManager->createSurveyQuestion($questionData, $section, false);
+            $this->surveyQuestionManager->createQuestion($questionData, $section, false);
         }
 
         $this->saveEntity($section, $flush);
@@ -33,7 +33,7 @@ class SurveySectionManager extends AbstractManager
         return $section;
     }
 
-    public function editSurveySection(SurveySection $section, SurveySectionDTO $sectionData): void
+    public function editSection(SurveySection $section, SurveySectionDTO $sectionData): void
     {
         $section->setName($sectionData->getName());
 

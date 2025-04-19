@@ -30,7 +30,7 @@ class SurveyManager extends AbstractManager
         $survey->setIsActive($surveyData->isActive());
 
         foreach ($surveyData->getSections() as $sectionData) {
-            $this->surveySectionManager->createSurveySection($sectionData, $survey, false);
+            $this->surveySectionManager->createSection($sectionData, $survey, false);
         }
 
         $this->saveEntity($survey, $flush);

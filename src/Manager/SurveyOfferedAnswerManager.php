@@ -10,7 +10,7 @@ use App\Entity\SurveyOfferedAnswer;
 
 class SurveyOfferedAnswerManager extends AbstractManager
 {
-    public function createSurveyOfferedAnswer(
+    public function createOfferedAnswer(
         SurveyOfferedAnswerDTO $offeredAnswerData,
         SurveyQuestion $surveyQuestion,
         bool $flush = true,
@@ -24,7 +24,7 @@ class SurveyOfferedAnswerManager extends AbstractManager
         return $answer;
     }
 
-    public function editSurvey(SurveyOfferedAnswer $offeredAnswer, SurveyOfferedAnswerDTO $offeredAnswerData): void
+    public function editOfferedAnswer(SurveyOfferedAnswer $offeredAnswer, SurveyOfferedAnswerDTO $offeredAnswerData): void
     {
         $offeredAnswer->setOfferedAnswer($offeredAnswerData->getAnswer());
 

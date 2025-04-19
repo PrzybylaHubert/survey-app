@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\DataTransferObject\RegisterDTO;
 use App\Manager\UserManager;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -23,9 +24,10 @@ class SecurityController extends AbstractController
     #[Route('/register', name: 'register', methods: ['POST'])]
     public function register(
         UserManager $userManager,
+        UserRepository $userRepository,
         #[MapRequestPayload(acceptFormat: 'json')] RegisterDTO $userData,
     ): JsonResponse {
-        if ($userManager->getRepository()->findOneBy(['email' => $userData->getEmail()])) {
+        if ($userRepository->findOneBy(['email' => $userData->getEmail()])) {
             return $this->json(['error' => 'User already exists'], 400);
         }
 
