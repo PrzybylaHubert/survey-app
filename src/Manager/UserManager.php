@@ -5,13 +5,16 @@ declare(strict_types=1);
 namespace App\Manager;
 
 use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserManager extends AbstractManager
 {
     public function __construct(
         private readonly UserPasswordHasherInterface $passwordHasher,
+        EntityManagerInterface $entityManager,
     ) {
+        parent::__construct($entityManager);
     }
 
     public function registerUser(string $email, string $plainPassword): void

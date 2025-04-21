@@ -7,12 +7,15 @@ namespace App\Manager;
 use App\DataTransferObject\SurveySectionDTO;
 use App\Entity\Survey;
 use App\Entity\SurveySection;
+use Doctrine\ORM\EntityManagerInterface;
 
 class SurveySectionManager extends AbstractManager
 {
     public function __construct(
         private readonly SurveyQuestionManager $surveyQuestionManager,
+        EntityManagerInterface $entityManager,
     ) {
+        parent::__construct($entityManager);
     }
 
     public function createSection(

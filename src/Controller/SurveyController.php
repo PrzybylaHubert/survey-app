@@ -8,6 +8,7 @@ use App\DataTransferObject\SurveyDTO;
 use App\Entity\Survey;
 use App\Entity\User;
 use App\Manager\SurveyManager;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -57,5 +58,20 @@ final class SurveyController extends AbstractController
         return $this->json([
             'success' => true,
         ]);
+    }
+
+    #[Route('/survey/{survey}/results', name: 'survey_results', methods: ['GET'])]
+    public function results(
+        #[MapEntity(expr: 'repository.findFullSurveyById(survey, true)')] Survey $survey,
+    ): JsonResponse {
+        $this->denyAccessUnlessGranted('EDIT', $survey);
+
+        return $this->json(
+            data: [
+                'survey' => $survey,
+                'surveyFinishes' => $survey->getSurveyAssignments()->count(),
+            ],
+            context: ['groups' => ['surveyInfo', 'surveyFull', 'surveyResults']],
+        );
     }
 }

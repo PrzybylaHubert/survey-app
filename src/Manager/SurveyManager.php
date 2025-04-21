@@ -8,6 +8,7 @@ use App\DataTransferObject\SurveyDTO;
 use App\Entity\Survey;
 use App\Entity\User;
 use App\Message\NewSurveyCreatedMessage;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class SurveyManager extends AbstractManager
@@ -15,7 +16,9 @@ class SurveyManager extends AbstractManager
     public function __construct(
         private readonly MessageBusInterface $messageBus,
         private readonly SurveySectionManager $surveySectionManager,
+        EntityManagerInterface $entityManager,
     ) {
+        parent::__construct($entityManager);
     }
 
     public function createSurvey(

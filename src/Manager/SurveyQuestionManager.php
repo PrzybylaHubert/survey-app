@@ -8,12 +8,15 @@ use App\DataTransferObject\SurveyQuestionDTO;
 use App\Entity\SurveySection;
 use App\Entity\SurveyQuestion;
 use App\Enum\QuestionType;
+use Doctrine\ORM\EntityManagerInterface;
 
 class SurveyQuestionManager extends AbstractManager
 {
     public function __construct(
         private readonly SurveyOfferedAnswerManager $surveyOfferedAnswerManager,
+        EntityManagerInterface $entityManager,
     ) {
+        parent::__construct($entityManager);
     }
 
     public function createQuestion(

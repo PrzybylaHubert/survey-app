@@ -7,9 +7,16 @@ namespace App\Manager;
 use App\DataTransferObject\SurveyOfferedAnswerDTO;
 use App\Entity\SurveyQuestion;
 use App\Entity\SurveyOfferedAnswer;
+use Doctrine\ORM\EntityManagerInterface;
 
 class SurveyOfferedAnswerManager extends AbstractManager
 {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+    ) {
+        parent::__construct($entityManager);
+    }
+
     public function createOfferedAnswer(
         SurveyOfferedAnswerDTO $offeredAnswerData,
         SurveyQuestion $surveyQuestion,
