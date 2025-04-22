@@ -42,9 +42,17 @@ class SurveyQuestion
     #[Groups(['surveyFull'])]
     private Collection $offeredAnswers;
 
+    /**
+     * @var Collection<int, SurveyUserAnswer>
+     */
+    #[ORM\OneToMany(targetEntity: SurveyUserAnswer::class, mappedBy: 'question', orphanRemoval: true)]
+    #[Groups(['surveyResults'])]
+    private Collection $userAnswers;
+
     public function __construct()
     {
         $this->offeredAnswers = new ArrayCollection();
+        $this->userAnswers = new ArrayCollection();
     }
 
 
@@ -129,5 +137,13 @@ class SurveyQuestion
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, SurveyOfferedAnswer>
+     */
+    public function getUserAnswers(): Collection
+    {
+        return $this->userAnswers;
     }
 }

@@ -15,10 +15,10 @@ class SurveySectionDTO
     /**
      * @var SurveyQuestionDTO[]
      */
-    #[Assert\Valid]
-    #[Assert\Type('array')]
-    #[Assert\NotNull(message: "Questions must be provided.")]
-    #[Assert\Count(min: 1, minMessage: "You must provide at least one question.")]
+    #[Assert\Valid(groups: ['create'])]
+    #[Assert\Type('array', groups: ['create'])]
+    #[Assert\NotNull(message: "Questions must be provided.", groups: ['create'])]
+    #[Assert\Count(min: 1, minMessage: "You must provide at least one question.", groups: ['create'])]
     private array $questions;
 
     public function getName(): string
