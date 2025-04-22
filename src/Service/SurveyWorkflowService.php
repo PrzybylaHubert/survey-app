@@ -15,8 +15,6 @@ use App\Entity\User;
 use App\Enum\QuestionType;
 use App\Repository\SurveyAssignmentRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SurveyWorkflowService
 {
@@ -35,7 +33,7 @@ class SurveyWorkflowService
         ]);
 
         if ($existingAssignment !== null) {
-            throw new AccessDeniedException('You already have an ongoing survey.');
+            return $existingAssignment;
         }
 
         $surveyAssignment = new SurveyAssignment();

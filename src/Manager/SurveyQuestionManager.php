@@ -41,7 +41,6 @@ class SurveyQuestionManager extends AbstractManager
     public function editQuestion(SurveyQuestion $question, SurveyQuestionDTO $questionData): void
     {
         $question->setQuestion($questionData->getQuestion());
-        $question->setQuestionType(QuestionType::from($questionData->getType()));
 
         $this->saveEntity($question);
     }

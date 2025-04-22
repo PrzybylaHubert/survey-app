@@ -70,13 +70,14 @@ final class PublicSurveyController extends AbstractController
     ): JsonResponse {
         $this->denyAccessUnlessGranted('VIEW', $survey);
 
-        $surveyWorkflowService->startSurvey($survey, $user);
+        $surveyAssignment = $surveyWorkflowService->startSurvey($survey, $user);
 
         return $this->json(
             data: [
                 'survey' => $survey,
+                '$surveyAssignment' => $surveyAssignment,
             ],
-            context: ['groups' => ['surveyInfo', 'surveyFull']],
+            context: ['groups' => ['surveyInfo', 'surveyFull', 'assignmentInfo']],
         );
     }
 

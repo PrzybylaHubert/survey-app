@@ -18,17 +18,17 @@ class SurveyQuestionDTO
         callback: [QuestionType::class, 'values'],
         message: 'The value you selected is not valid. Available choices are: {{ choices }}.'
     )]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(groups: ['create'])]
     private string $type;
 
     /**
      * @var SurveyOfferedAnswerDTO[]
      */
-    #[Assert\Valid]
-    #[Assert\Type('array')]
+    #[Assert\Valid(groups: ['create'])]
+    #[Assert\Type('array', groups: ['create'])]
     private array $offeredAnswers = [];
 
-    #[Assert\Callback]
+    #[Assert\Callback(groups: ['create'])]
     public function validateOfferedAnswers(ExecutionContextInterface $context): void
     {
         if (in_array($this->type, [QuestionType::TEXT->value, QuestionType::NUMBER->value], true)) {

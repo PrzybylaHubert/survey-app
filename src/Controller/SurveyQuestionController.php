@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api', name: 'api_')]
 final class SurveyQuestionController extends AbstractController
 {
-    #[Route('/survey-question/{SurveySection}', name: 'survey_question_create', methods: ['POST'])]
+    #[Route('/survey-question/{surveySection}', name: 'survey_question_create', methods: ['POST'])]
     public function create(
         #[MapRequestPayload(acceptFormat: 'json', validationGroups: ['create'])] SurveyQuestionDTO $surveyQuestionData,
         SurveyQuestionManager $surveyQuestionManager,
