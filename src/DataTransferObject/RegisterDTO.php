@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DataTransferObject;
 
+use App\Validator\Password;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class RegisterDTO
@@ -12,8 +13,7 @@ class RegisterDTO
     #[Assert\Email]
     private string $email;
 
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 6)]
+    #[Password()]
     private string $password;
 
     public function __construct(string $email, string $password)
