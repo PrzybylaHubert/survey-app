@@ -25,4 +25,15 @@ class UserManager extends AbstractManager
 
         $this->saveEntity($user);
     }
+
+    public function validatePassword(User $user, string $plainPassword): bool
+    {
+        return $this->passwordHasher->isPasswordValid($user, $plainPassword);
+    }
+
+    public function changePassword(User $user, string $newPassword): void
+    {
+        $user->setPassword($this->passwordHasher->hashPassword($user, $newPassword));
+        $this->saveEntity($user);
+    }
 }

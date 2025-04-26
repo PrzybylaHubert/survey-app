@@ -18,9 +18,4 @@ class SurveyAnswers extends Constraint
     ) {
         parent::__construct([], $groups, $payload);
     }
-
-    public function validatedBy(): string
-    {
-        return static::class.'Validator';
-    }
 }
