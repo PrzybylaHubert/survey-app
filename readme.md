@@ -15,6 +15,7 @@ I focused on using Symfony's potential and performance
 - Run `docker compose up -d`
 - Run `docker ps` to list containers, then select id of symfony_app container and run `docker exec -it {container_id} /bin/bash`
 - Run `make init` or run all commands in the [Makefile](/Makefile)
+- Make copy of [example.env.local](/example.env.local), rename to `.env.local` and fill the variables  to ensure that all features will work correctly.
 - Done!
 
 ## Endpoints
