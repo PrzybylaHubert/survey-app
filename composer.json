@@ -17,6 +17,7 @@
         "phpstan/phpdoc-parser": "^2.1",
         "symfony/amqp-messenger": "7.2.*",
         "symfony/apache-pack": "^1.0",
+        "symfony/cache": "7.2.*",
         "symfony/console": "7.2.*",
         "symfony/dotenv": "7.2.*",
         "symfony/expression-language": "7.2.*",
@@ -31,7 +32,8 @@
         "symfony/security-bundle": "7.2.*",
         "symfony/serializer": "7.2.*",
         "symfony/validator": "7.2.*",
-        "symfony/yaml": "7.2.*"
+        "symfony/yaml": "7.2.*",
+        "tpay-com/tpay-openapi-php": "^1.8"
     },
     "config": {
         "allow-plugins": {

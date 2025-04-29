@@ -46,3 +46,9 @@ services:
       - xpack.security.enabled=false
     ports:
       - "9200:9200"
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
