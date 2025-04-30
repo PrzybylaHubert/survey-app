@@ -8,8 +8,8 @@ RUN apt-get update && apt-get install -y \
     git unzip zip libzip-dev libonig-dev libxml2-dev libcurl4-openssl-dev libssl-dev \
     mariadb-client librabbitmq-dev \
     && docker-php-ext-install pdo pdo_mysql zip sockets pcntl \
-    && pecl install amqp \
-    && docker-php-ext-enable amqp \
+    && pecl install amqp redis \
+    && docker-php-ext-enable amqp redis \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install Composer
