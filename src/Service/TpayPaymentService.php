@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use App\DTO\TpayPayerDTO;
+use App\Entity\User;
+use App\Enum\TpayResult;
+use App\Manager\PaymentManager;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Tpay\OpenApi\Api\TpayApi;
@@ -18,7 +22,7 @@ class TpayPaymentService
 
     public function __construct(
         private readonly CacheInterface $cache,
-        private readonly ParameterBagInterface $parameterBag,
+        private readonly PaymentManager $paymentManager,
         string $projectDir,
         string $tpayClientId,
         string $tpayClientSecret,
@@ -35,6 +39,48 @@ class TpayPaymentService
         });
 
         $this->tpayApi->setCustomToken(unserialize($token));
+    }
+
+    public function createTransaction(
+        User $user,
+        int $amount,
+        string $description,
+        TpayPayerDTO $tpayPayerData,
+    ): array {
+        $payerData = array_filter([
+            'email' => $user->getEmail(),
+            'name' => $tpayPayerData->getName(),
+            'phone' => $tpayPayerData->getPhone(),
+            'address' => $tpayPayerData->getAddress(),
+            'code' => $tpayPayerData->getCode(),
+            'city' => $tpayPayerData->getCity(),
+            'country' => $tpayPayerData->getCountry(),
+            'taxId' => $tpayPayerData->getTaxId(),
+        ], fn($value) => !is_null($value));
+
+        $response = $this->tpayApi->transactions()->createTransaction([
+            'amount' => $amount,
+            'description' => $description,
+            'payer' => $payerData,
+            'lang' => 'en',
+        ]);
+
+        if (TpayResult::tryFrom($response['result']) === TpayResult::SUCCESS) {
+            $this->paymentManager->createPayment(
+                $user,
+                $amount,
+                $description,
+                $response['transactionId']
+            );
+    
+            return $response;
+        }
+
+        throw new BadRequestHttpException(sprintf(
+            'Tpay transaction failed: %s - %s',
+            $response['errors'][0]['fieldName'],
+            $response['errors'][0]['errorMessage']
+        ));
     }
 
     public function getTpayApi(): TpayApi
