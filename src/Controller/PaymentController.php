@@ -22,7 +22,7 @@ final class PaymentController extends AbstractController
         #[CurrentUser()] User $user,
         TpayPaymentService $tpayPaymentService,
     ): JsonResponse {
-        $response = $tpayPaymentService->createTransaction(
+        $paymentUrl = $tpayPaymentService->createTransaction(
             user: $user,
             amount: 100,
             description: 'Premium user payment',
@@ -32,7 +32,7 @@ final class PaymentController extends AbstractController
         return $this->json(
             data: [
                 'success' => true,
-                'paymentUrl' => $response['transactionPaymentUrl'],
+                'paymentUrl' => $paymentUrl,
             ],
         );
     }

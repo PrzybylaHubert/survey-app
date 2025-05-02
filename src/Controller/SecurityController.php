@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[Route('/api', name: 'api_')]
-class SecurityController extends AbstractController
+final class SecurityController extends AbstractController
 {
     #[Route('/login', name: 'login', methods: ['POST'])]
     public function login(): void

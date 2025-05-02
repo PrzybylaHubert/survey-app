@@ -33,6 +33,9 @@ class Payment
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?User $user = null;
 
+    #[ORM\Column(length: 255)]
+    private string $paymentLink;
+
     public function getId(): int
     {
         return $this->id;
@@ -106,6 +109,18 @@ class Payment
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getPaymentLink(): string
+    {
+        return $this->paymentLink;
+    }
+
+    public function setPaymentLink(string $paymentLink): static
+    {
+        $this->paymentLink = $paymentLink;
 
         return $this;
     }

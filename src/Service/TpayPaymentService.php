@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\DTO\TpayPayerDTO;
 use App\Entity\User;
+use App\Enum\PaymentStatus;
 use App\Enum\TpayResult;
 use App\Manager\PaymentManager;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -46,7 +47,27 @@ class TpayPaymentService
         int $amount,
         string $description,
         TpayPayerDTO $tpayPayerData,
-    ): array {
+    ): string {
+        $pendingPayment = $this->paymentManager->findPendingPaymentForUser($user);
+
+        if ($pendingPayment !== null) {
+            $externalId = $pendingPayment->getExternalId();
+            try {
+                // error, if not found throws 500
+                $transaction = $this->tpayApi->transactions()->getTransactionById($externalId);
+                $paymentStatus = PaymentStatus::tryFrom($transaction['status']);
+
+                if ($paymentStatus === PaymentStatus::PENDING) {
+                    return $pendingPayment->getPaymentLink();
+                } else {
+                    $pendingPayment->setStatus($paymentStatus);
+                    $this->paymentManager->saveEntity($pendingPayment);
+                }
+            } catch (\Exception $e) {
+            }
+
+        }
+
         $payerData = array_filter([
             'email' => $user->getEmail(),
             'name' => $tpayPayerData->getName(),
@@ -58,28 +79,28 @@ class TpayPaymentService
             'taxId' => $tpayPayerData->getTaxId(),
         ], fn($value) => !is_null($value));
 
-        $response = $this->tpayApi->transactions()->createTransaction([
+        $transaction = $this->tpayApi->transactions()->createTransaction([
             'amount' => $amount,
             'description' => $description,
             'payer' => $payerData,
             'lang' => 'en',
         ]);
 
-        if (TpayResult::tryFrom($response['result']) === TpayResult::SUCCESS) {
+        if (TpayResult::tryFrom($transaction['result']) === TpayResult::SUCCESS) {
             $this->paymentManager->createPayment(
                 $user,
                 $amount,
-                $description,
-                $response['transactionId']
+                $transaction['transactionId'],
+                $transaction['transactionPaymentUrl'],
             );
-    
-            return $response;
+
+            return $transaction['transactionPaymentUrl'];
         }
 
         throw new BadRequestHttpException(sprintf(
             'Tpay transaction failed: %s - %s',
-            $response['errors'][0]['fieldName'],
-            $response['errors'][0]['errorMessage']
+            $transaction['errors'][0]['fieldName'],
+            $transaction['errors'][0]['errorMessage']
         ));
     }
 
