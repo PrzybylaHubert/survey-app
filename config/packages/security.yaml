@@ -21,6 +21,12 @@ security:
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
+        tpay_webhook:
+            pattern: ^/api/await-notification
+            stateless: true
+            custom_authenticators:
+                - App\Security\TpayWebhookAuthenticator
+
         api:
             pattern: ^/api
             stateless: true
@@ -32,6 +38,7 @@ security:
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api/register, roles: PUBLIC_ACCESS }
+        - { path: ^/api/await-notification, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: ROLE_USER }
 
 when@test:

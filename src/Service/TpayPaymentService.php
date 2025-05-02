@@ -10,6 +10,7 @@ use App\Enum\PaymentStatus;
 use App\Enum\TpayResult;
 use App\Manager\PaymentManager;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Tpay\OpenApi\Api\TpayApi;
@@ -24,6 +25,7 @@ class TpayPaymentService
     public function __construct(
         private readonly CacheInterface $cache,
         private readonly PaymentManager $paymentManager,
+        private readonly UrlGeneratorInterface $urlGenerator,
         string $projectDir,
         string $tpayClientId,
         string $tpayClientSecret,
@@ -55,6 +57,7 @@ class TpayPaymentService
             try {
                 // error, if not found throws 500
                 $transaction = $this->tpayApi->transactions()->getTransactionById($externalId);
+                // enum provided by tpay would be great
                 $paymentStatus = PaymentStatus::tryFrom($transaction['status']);
 
                 if ($paymentStatus === PaymentStatus::PENDING) {
@@ -84,6 +87,11 @@ class TpayPaymentService
             'description' => $description,
             'payer' => $payerData,
             'lang' => 'en',
+            'callbacks' => [
+                'notification' => [
+                  'url' => $this->urlGenerator->generate('await_notification', [], UrlGeneratorInterface::ABSOLUTE_URL)
+                ]
+            ]
         ]);
 
         if (TpayResult::tryFrom($transaction['result']) === TpayResult::SUCCESS) {
