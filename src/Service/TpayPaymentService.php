@@ -57,10 +57,10 @@ class TpayPaymentService
         $pendingPayment = $this->paymentManager->findPendingPaymentForUser($user);
 
         if ($pendingPayment !== null) {
-            $externalId = $pendingPayment->getExternalId();
+            $externalTransactionId = $pendingPayment->getExternalTransactionId();
             try {
                 // error, if not found throws 500
-                $transaction = $this->tpayApi->transactions()->getTransactionById($externalId);
+                $transaction = $this->tpayApi->transactions()->getTransactionById($externalTransactionId);
                 // enum provided by tpay would be great
                 $paymentStatus = PaymentStatus::tryFrom($transaction['status']);
 
@@ -104,6 +104,7 @@ class TpayPaymentService
                 $user,
                 $amount,
                 $transaction['title'],
+                $transaction['transactionId'],
                 $transaction['transactionPaymentUrl'],
             );
 
