@@ -19,6 +19,7 @@
         "symfony/apache-pack": "^1.0",
         "symfony/cache": "7.2.*",
         "symfony/console": "7.2.*",
+        "symfony/debug-bundle": "7.2.*",
         "symfony/dotenv": "7.2.*",
         "symfony/expression-language": "7.2.*",
         "symfony/flex": "^2",
