@@ -22,11 +22,13 @@ class PaymentManager extends AbstractManager
     public function createPayment(
         User $user,
         int $amount,
+        string $externalId,
         string $externalTransactionId,
         string $paymentLink,
     ): Payment {
         $payment = new Payment();
-        $payment->setExternalId($externalTransactionId)
+        $payment->setExternalId($externalId)
+            ->setExternalTransactionId($externalTransactionId)
             ->setAmount($amount)
             ->setStatus(PaymentStatus::PENDING)
             ->setCreatedAt(new \DateTimeImmutable())

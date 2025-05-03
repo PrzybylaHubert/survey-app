@@ -39,6 +39,9 @@ class Payment
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $refundedAt = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $externalTransactionId = null;
+
     public function getId(): int
     {
         return $this->id;
@@ -146,6 +149,18 @@ class Payment
     public function setRefundedAt(?\DateTimeImmutable $refundedAt): static
     {
         $this->refundedAt = $refundedAt;
+
+        return $this;
+    }
+
+    public function getExternalTransactionId(): ?string
+    {
+        return $this->externalTransactionId;
+    }
+
+    public function setExternalTransactionId(string $externalTransactionId): static
+    {
+        $this->externalTransactionId = $externalTransactionId;
 
         return $this;
     }
