@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\DTO\TpayPayerDTO;
+use App\Entity\Payment;
 use App\Entity\User;
 use App\Enum\PaymentStatus;
+use App\Enum\TpayNotificationStatus;
 use App\Enum\TpayResult;
 use App\Manager\PaymentManager;
+use App\Strategy\Payment\PaymentStrategySelector;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -26,6 +29,7 @@ class TpayPaymentService
         private readonly CacheInterface $cache,
         private readonly PaymentManager $paymentManager,
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly PaymentStrategySelector $strategySelector,
         string $projectDir,
         string $tpayClientId,
         string $tpayClientSecret,
@@ -89,16 +93,17 @@ class TpayPaymentService
             'lang' => 'en',
             'callbacks' => [
                 'notification' => [
-                  'url' => $this->urlGenerator->generate('await_notification', [], UrlGeneratorInterface::ABSOLUTE_URL)
+                  'url' => $this->urlGenerator->generate('api_await_notification', [], UrlGeneratorInterface::ABSOLUTE_URL)
                 ]
             ]
         ]);
 
+        // transaction title as transaction id?
         if (TpayResult::tryFrom($transaction['result']) === TpayResult::SUCCESS) {
             $this->paymentManager->createPayment(
                 $user,
                 $amount,
-                $transaction['transactionId'],
+                $transaction['title'],
                 $transaction['transactionPaymentUrl'],
             );
 
@@ -110,6 +115,19 @@ class TpayPaymentService
             $transaction['errors'][0]['fieldName'],
             $transaction['errors'][0]['errorMessage']
         ));
+    }
+
+    public function handleNotification(Payment $payment, string $status): void
+    {
+        $strategy = $this->strategySelector->select($payment);
+
+        match (TpayNotificationStatus::tryFrom($status)) {
+            TpayNotificationStatus::FALSE => $strategy->handleUnsuccessfulPayment($payment),
+            TpayNotificationStatus::TRUE => $payment->isPending() ? $strategy->handleSuccessfulPayment($payment) : null,
+            TpayNotificationStatus::PAID => $payment->isPending() ? $strategy->handleAlreadyPaidPayment($payment) : null,
+            TpayNotificationStatus::CHARGEBACK => $payment->isPaid() ? $strategy->handleReturnedPayment($payment) : null,
+            default => throw new \InvalidArgumentException("Unknown status: $status"),
+        };
     }
 
     public function getTpayApi(): TpayApi

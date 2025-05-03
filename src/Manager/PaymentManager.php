@@ -46,4 +46,11 @@ class PaymentManager extends AbstractManager
             'status' => PaymentStatus::PENDING,
         ]);
     }
+
+    public function findPaymentByExternalId(string $externalId): ?Payment
+    {
+        return $this->paymentRepository->findOneBy([
+            'externalId' => $externalId
+        ]);
+    }
 }
