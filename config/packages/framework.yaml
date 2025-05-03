@@ -13,3 +13,8 @@ when@test:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+
+when@dev:
+    framework:
+        trusted_proxies: '0.0.0.0/0'
+        trusted_headers: [ "x-forwarded-for", "x-forwarded-proto", "x-forwarded-host", "x-forwarded-port" ]

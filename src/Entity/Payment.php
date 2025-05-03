@@ -36,6 +36,9 @@ class Payment
     #[ORM\Column(length: 255)]
     private string $paymentLink;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $refundedAt = null;
+
     public function getId(): int
     {
         return $this->id;
@@ -75,6 +78,16 @@ class Payment
         $this->status = $status;
 
         return $this;
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->status === PaymentStatus::SUCCESS;
+    }
+
+    public function isPending(): bool
+    {
+        return $this->status === PaymentStatus::PENDING;
     }
 
     public function getCreatedAt(): ?\DateTimeImmutable
@@ -121,6 +134,18 @@ class Payment
     public function setPaymentLink(string $paymentLink): static
     {
         $this->paymentLink = $paymentLink;
+
+        return $this;
+    }
+
+    public function getRefundedAt(): ?\DateTimeImmutable
+    {
+        return $this->refundedAt;
+    }
+
+    public function setRefundedAt(?\DateTimeImmutable $refundedAt): static
+    {
+        $this->refundedAt = $refundedAt;
 
         return $this;
     }

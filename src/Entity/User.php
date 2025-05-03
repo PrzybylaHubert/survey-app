@@ -56,6 +56,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Payment::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $payments;
 
+    #[ORM\Column(options: ['default' => false])]
+    private bool $isPremium = false;
+
     public function __construct()
     {
         $this->surveys = new ArrayCollection();
@@ -224,6 +227,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $payment->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isPremium(): ?bool
+    {
+        return $this->isPremium;
+    }
+
+    public function setIsPremium(bool $isPremium): static
+    {
+        $this->isPremium = $isPremium;
 
         return $this;
     }
