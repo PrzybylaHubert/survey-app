@@ -23,6 +23,12 @@ services:
     App\Service\SurveySearchService:
         arguments:
             - '@fos_elastica.finder.survey'
+    
+    App\Service\TpayPaymentService:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+            $tpayClientId: '%env(TPAY_CLIENT_ID)%'
+            $tpayClientSecret: '%env(TPAY_CLIENT_SECRET)%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

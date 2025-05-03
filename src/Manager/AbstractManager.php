@@ -32,4 +32,9 @@ abstract class AbstractManager
             $this->entityManager->flush();
         }
     }
+
+    public function saveChanges(): void
+    {
+        $this->entityManager->flush();
+    }
 }
