@@ -118,6 +118,17 @@ class TpayPaymentService
         ));
     }
 
+    public function handleManualCheck(Payment $payment, string $status): void
+    {
+        $strategy = $this->strategySelector->select($payment);
+
+        match (PaymentStatus::tryFrom($status)) {
+            PaymentStatus::CORRECT => $payment->isPending() ? $strategy->handleSuccessfulPayment($payment) : null,
+            PaymentStatus::REFUND => $payment->isPaid() ? $strategy->handleReturnedPayment($payment) : null,
+            default => throw new \InvalidArgumentException("Unknown status: $status"),
+        };
+    }
+
     public function handleNotification(Payment $payment, string $status): void
     {
         $strategy = $this->strategySelector->select($payment);

@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Enum\PaymentStatus;
 use App\Repository\PaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
 class Payment
@@ -12,6 +13,7 @@ class Payment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['paymentData'])]
     private int $id;
 
     #[ORM\Column(length: 63)]
@@ -21,12 +23,15 @@ class Payment
     private int $amount;
 
     #[ORM\Column(enumType: PaymentStatus::class)]
+    #[Groups(['paymentData'])]
     private PaymentStatus $status;
 
     #[ORM\Column]
+    #[Groups(['paymentData'])]
     private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['paymentData'])]
     private ?\DateTimeImmutable $paidAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'payments')]
@@ -34,9 +39,11 @@ class Payment
     private ?User $user = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['paymentData'])]
     private string $paymentLink;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['paymentData'])]
     private ?\DateTimeImmutable $refundedAt = null;
 
     #[ORM\Column(length: 255)]
