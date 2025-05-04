@@ -49,6 +49,16 @@ class PaymentManager extends AbstractManager
         ]);
     }
 
+    /**
+     * @return Payment[]
+     */
+    public function getUserPayments(User $user): array
+    {
+        return $this->paymentRepository->findBy([
+            'user' => $user,
+        ]);
+    }
+
     public function findPaymentByExternalId(string $externalId): ?Payment
     {
         return $this->paymentRepository->findOneBy([

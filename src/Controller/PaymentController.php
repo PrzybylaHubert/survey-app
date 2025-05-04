@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\DTO\TpayPayerDTO;
+use App\Entity\Payment;
 use App\Entity\User;
 use App\Manager\PaymentManager;
 use App\Service\TpayPaymentService;
@@ -46,6 +47,46 @@ final class PaymentController extends AbstractController
                 'success' => true,
                 'paymentUrl' => $paymentUrl,
             ],
+        );
+    }
+
+    #[Route('/payments', name: 'get_user_payments', methods: ['GET'])]
+    public function getUserPayments(
+        #[CurrentUser()] User $user,
+        PaymentManager $paymentManager,
+    ): JsonResponse {
+        $userPayments = $paymentManager->getUserPayments($user);
+
+        return $this->json(
+            data: [
+                'userPayments' => $userPayments,
+            ],
+            context: ['groups' => ['paymentData']],
+        );
+    }
+
+    #[Route('/check-payment/{payment}', name: 'manual_check_payment', methods: ['POST'])]
+    public function manualCheckPayment(
+        #[CurrentUser()] User $user,
+        Payment $payment,
+        TpayPaymentService $tpayPaymentService,
+    ): JsonResponse {
+        if ($payment->getUser() !== $user) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $externalPayment = $tpayPaymentService->getTpayApi()->transactions()->getTransactionById(
+            $payment->getExternalTransactionId()
+        );
+
+        $tpayPaymentService->handleManualCheck($payment, $externalPayment['status']);
+
+        return $this->json(
+            data: [
+                'payment' => $payment,
+                'externalPayment' => $externalPayment
+            ],
+            context: ['groups' => ['paymentData']],
         );
     }
 

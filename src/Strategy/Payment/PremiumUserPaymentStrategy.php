@@ -33,7 +33,7 @@ class PremiumUserPaymentStrategy implements PaymentProductStrategyInterface
         $user = $payment->getUser();
         $user->setIsPremium(false);
 
-        $payment->setStatus(PaymentStatus::REFUNDED);
+        $payment->setStatus(PaymentStatus::REFUND);
         $payment->setRefundedAt(new \DateTimeImmutable());
 
         $this->paymentManager->saveChanges();
