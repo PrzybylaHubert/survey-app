@@ -13,15 +13,13 @@ abstract class AbstractManager
     ) {
     }
 
-    public function saveEntity(object $entity, bool $flush = true): bool
+    public function saveEntity(object $entity, bool $flush = true): void
     {
         $this->entityManager->persist($entity);
 
         if ($flush) {
             $this->entityManager->flush();
         }
-
-        return true;
     }
 
     public function removeEntity(object $entity, bool $flush = true): void
