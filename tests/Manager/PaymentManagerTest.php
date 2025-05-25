@@ -8,11 +8,13 @@ use App\Enum\PaymentStatus;
 use App\Manager\PaymentManager;
 use App\Repository\PaymentRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class PaymentManagerTest extends TestCase
 {
     private PaymentRepository $paymentRepository;
+    /** @var MockObject&EntityManagerInterface */
     private EntityManagerInterface $entityManager;
     private PaymentManager $paymentManager;
 

@@ -4,11 +4,14 @@ namespace App\Tests\Manager;
 
 use App\Manager\AbstractManager;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+
 
 class AbstractManagerTest extends TestCase
 {
     private AbstractManager $abstractManager;
+    /** @var MockObject&EntityManagerInterface */
     private EntityManagerInterface $entityManager;
 
     protected function setUp(): void

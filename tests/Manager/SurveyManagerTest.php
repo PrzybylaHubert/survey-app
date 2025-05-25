@@ -8,14 +8,18 @@ use App\Entity\User;
 use App\Manager\SurveyManager;
 use App\Manager\SurveySectionManager;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class SurveyManagerTest extends TestCase
 {
+    /** @var MockObject&EntityManagerInterface */
     private EntityManagerInterface $entityManager;
+    /** @var MockObject&SurveySectionManager */
     private SurveySectionManager $surveySectionManager;
+    /** @var MockObject&MessageBusInterface */
     private MessageBusInterface $messageBus;
     private SurveyManager $surveyManager;
 
